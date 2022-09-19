@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RomanNumeralConverter
+﻿namespace RomanNumeralConverter
 {
     public static class Converter
     {
-        private static List<string> romanNumerals = new List<string> () {"0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
-        private static List<char> romanSymbols = new List<char>() { 'I', 'V', 'X', 'L', 'C', 'D', 'M'};
         static readonly Dictionary<int, string> numeralsDictionary = new ()
         {
             { 1, "I" },
@@ -44,15 +36,6 @@ namespace RomanNumeralConverter
             { 3000, "MMM" },
         };
 
-        public static int ConvertFromRoman(string romanNumber) 
-        {
-            if (!string.IsNullOrWhiteSpace(romanNumber) && romanNumerals.Contains(romanNumber))
-            {
-                return romanNumerals.IndexOf(romanNumber);
-            }
-            return 0;
-        }
-
         public static string ConvertFromArabic(int number)
         {
             string result = string.Empty;
@@ -70,15 +53,45 @@ namespace RomanNumeralConverter
             return result;
         }
 
-        public static bool RomanNumeralInputIsCorrect(string inputString) 
+        public static int ConvertFromRoman(string romanNumber)
+        {
+            int result = 0;
+            if (!RomanNumeralInputIsCorrect(romanNumber)) return result;
+
+            //Creating reversed dictionary where roman numeral is a key and equivalent arabic number is value
+            Dictionary<string, int> reversedDictionary = numeralsDictionary.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+            romanNumber = romanNumber.Trim().ToUpper();
+            string substring = romanNumber;
+            string notFounded = string.Empty;
+
+            while (substring.Length > 0)
+            {
+                if (reversedDictionary.ContainsKey(substring))
+                {
+                    result += reversedDictionary[substring];
+                    substring = notFounded;
+                    notFounded = string.Empty;
+                }
+                else 
+                {
+                    notFounded += substring[0];
+                    //equivalent of substring.Substring(1)
+                    substring = substring[1..];
+                }
+            }
+            return result;
+        }
+
+
+        public static bool RomanNumeralInputIsCorrect(string inputString)
         {
             if (string.IsNullOrWhiteSpace(inputString))
-            { 
+            {
                 return false;
             }
-
-            HashSet<char> setOfInputSymbols = new HashSet<char>(inputString.Trim().ToUpper());
-            foreach (char symbol in setOfInputSymbols)
+            string romanSymbols = "IVXLCDM";
+            inputString = inputString.Trim().ToUpper();
+            foreach (char symbol in inputString)
             {
                 if (!romanSymbols.Contains(symbol))
                 {
@@ -87,7 +100,6 @@ namespace RomanNumeralConverter
             }
             return true;
         }
-
         public static bool ArabicInputIsCorrect(int number) => number < 4000 && number > 0;
     }
 }

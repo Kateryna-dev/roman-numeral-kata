@@ -19,19 +19,22 @@ namespace RomanNumeralConverter.Tests
             Converter.ConvertFromArabic(100).Should().Be("C");
         }
 
-
         [Test]
         public void ConvertFromRoman_Shoud_Return_Correct_Numeral_For_Different_Inputs()
         {
+            Converter.ConvertFromRoman("XX").Should().Be(20);
             Converter.ConvertFromRoman("I").Should().Be(1);
-            Converter.ConvertFromRoman("II").Should().Be(2);
+            Converter.ConvertFromRoman("VII").Should().Be(7);
             Converter.ConvertFromRoman("X").Should().Be(10);
-        }
-
-        [Test]
-        public void ConvertFromRoman_Shoud_Return_Zero_For_Invalid_Input()
-        {
-            Converter.ConvertFromRoman("Hello").Should().Be(0);
+            Converter.ConvertFromRoman("XCIII").Should().Be(93);
+            Converter.ConvertFromRoman("LXXI").Should().Be(71);
+            Converter.ConvertFromRoman("D").Should().Be(500);
+            Converter.ConvertFromRoman("M").Should().Be(1000);
+            Converter.ConvertFromRoman("C").Should().Be(100);
+            Converter.ConvertFromRoman("LXXI").Should().Be(71);
+            Converter.ConvertFromRoman("DXCIX").Should().Be(599);
+            Converter.ConvertFromRoman("MMMI").Should().Be(3001);
+            Converter.ConvertFromRoman("CCCIII").Should().Be(303);
         }
 
         [Test]
@@ -57,6 +60,22 @@ namespace RomanNumeralConverter.Tests
             Converter.RomanNumeralInputIsCorrect("FFF").Should().Be(false);
             Converter.RomanNumeralInputIsCorrect("X0.1").Should().Be(false);
         }
+
+
+        [Test]
+        public void ConvertFromRoman_Shoud_Return_Zero_For_Not_Valid_Input()
+        {
+            Converter.ConvertFromRoman("Hello").Should().Be(0);
+        }
+
+
+        //[Test]
+        //public void ArabicInputIsCorrect_Shoud_Return_False_For_Not_Valid_Input()
+        //{
+        //    Converter.ArabicInputIsCorrect(10).Should().Be(false);
+        //    Converter.ArabicInputIsCorrect(555).Should().Be(false);
+        //    Converter.ArabicInputIsCorrect(3999).Should().Be(false);
+        //}
 
     }
 }
